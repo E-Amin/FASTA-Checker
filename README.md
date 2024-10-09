@@ -7,9 +7,16 @@ FASTA Format Validator is a Python tool that validates FASTA files for Next-Gene
 - **Streamlit Interface**: Provides a user-friendly web interface for easy file uploads and analysis.
 - **Detailed Reports**: Identifies issues in FASTA files, including non-ASCII characters, invalid sequences, gaps, and blank lines, with comprehensive details in a table format.
 
+
+## Requirements
+
+- Python: Ensure you have Python installed.
+- Streamlit: Install Streamlit via pip:
+  pip install streamlit
+  
 ## Usage
 
 1. **Run the Script**: 
    ```bash
-   python -m streamlit run <script_name>.py
+   python -m streamlit run fasta_checker.py
 
