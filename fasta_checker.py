@@ -8,6 +8,7 @@
 
 import streamlit as st
 import pandas as pd
+import chardet  # For automatic encoding detection
 from Bio import SeqIO
 
 issue_num = 0
@@ -114,20 +115,31 @@ def check_file(file_content):
 #=====================================
 # Streamlit UI
 st.title("FASTA/Text File Quality Checker")
-st.write("Upload a FASTA, TXT, or FA file to check for issues such as non-ASCII characters, sequence validity, gaps, and blank lines.")
+st.write("Upload a file to check for issues such as non-ASCII characters, sequence validity, gaps, and blank lines.")
 
-uploaded_file = st.file_uploader("Choose a file", type=["fasta", "txt", "fa"])
+uploaded_file = st.file_uploader("Choose a file")
 
 if uploaded_file is not None:
-    file_content = uploaded_file.read().decode("utf-8")
+    # Read the raw file
+    rawfile = uploaded_file.read()
+    
+    # Detect encoding and Decode the file content
+    result = chardet.detect(rawfile)
+    charenc = result['encoding']
+    file_content = rawfile.decode(charenc)
+    
+    # Check for issues in the file content
     issues = check_file(file_content)
     
     if issues:
-        # Create DataFrame and sort by Line Number
+        # Create DataFrame and sort by Line Number if necessary
         df = pd.DataFrame(issues)
-        #df = df.sort_values(by="Line Number")
+        # df = df.sort_values(by="Line Number")  # Uncomment if you want to sort by line number
         
-        # Display the table with custom size
+        # Count the number of issues found
+        issue_num = len(issues)
+        
+        # Display the number of issues found and the table with custom size
         st.write(f"There are {issue_num} issues found in the file:")
         st.dataframe(df, height=600, width=1000)  # Increase table size
     else:
